@@ -1,30 +1,27 @@
 <template>
   <div id="app">
-      <div class='app_top'>
-          <ul class='top_ul'>
-            <li class='li_img'><img src="./assets/logo.png"></li>
-            <li>Home</li>
-            <li>IOS</li>
-            <li>Android</li>
-            <li>Html</li>
-            <li>Java</li>
-          </ul>
-      </div>
-
-    
-      <div class='app_center'>
-          <div class="input-group col-md-3">  
-
-            <Input v-model="value" placeholder="请输入..." style="width: 300px"></Input>
-            <Button type="info">信息按钮</Button>
-          </div>  
-      </div>
+      <Top></Top>
+      <AppCenter></AppCenter>
+      
   </div>
 </template>
 
 <script>
+import Top from './AppTop.vue';
+import AppCenter from './AppCenter';
+
 export default {
-  name: 'app'
+  name: 'app',
+  data: {
+
+  },
+  methods: {
+
+  },
+  components: {
+    Top,
+    AppCenter
+  }
 }
 </script>
 
@@ -38,6 +35,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  font-size: 18px;
   color: #3f3f3f;
 }
 .app_top {
@@ -55,7 +53,10 @@ export default {
   line-height: 70px;
 }
 .li_img {
-   padding-left: 20%;
+   padding-left: 10%;
+}
+.top_search {
+ 
 }
 .top_ul li:hover{
   color: red;
