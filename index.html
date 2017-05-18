@@ -29,7 +29,8 @@
 	    	{{items.type1}}
 	    </div>
 	        <i-Button type="primary" @click='btnClick'>按钮</i-Button>
-		</div>
+	        <img src="./resource/person.jpeg" width='200px' height='267px'>
+	</div>
 
 	<template id='tem'>
 		<div>
@@ -53,8 +54,6 @@
 			},
 			methods: {
 				btnClick() {
-                    window.location.href='home.html';
-
 					axios.get('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su', {
 					  })
 					  .then(function(response){
