@@ -64,7 +64,7 @@ app.use(staticPath, express.static('./static'))
 
 // var uri = 'http://localhost:' + port
 
-var uri = 'https://hccong.github.io/vueblog'
+var uri = 'https://hccong.github.io'
 
 var _resolve
 var readyPromise = new Promise(resolve => {
