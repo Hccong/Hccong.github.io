@@ -1,7 +1,7 @@
 <template>
 		<div class='app_top'>
           <ul class='top_ul'>
-            <li class='li_img'><img src="./assets/logo.png"></li>
+            <!-- <li class='li_img'><img src="./assets/logo.png"></li> -->
             <li>Home</li>
             <li>IOS</li>
             <li>Android</li>
@@ -25,5 +25,30 @@
 </script>
 
 <style type="text/css">
+.app_top {
+  height: 70px;
+  line-height: 70px;
+}
+.top_ul {
+  text-align: center;
+}
+.top_ul li{
+  list-style: none;
+  float: left;
+  margin: 0 1.2%;
+  height: 70px;
+  line-height: 70px;
+  padding: 3px 3px;
+  background-color: red;
+}
+.li_img {
+   padding-left: 10%;
+}
+.top_search {
+ 
+}
+.top_ul li:hover{
+  color: red;
+}
 
 </style>

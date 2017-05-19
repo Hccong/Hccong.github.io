@@ -16,12 +16,16 @@
 
 		},
 		methods: {
-      
+
 		}
 	});
 </script>
 
 <style type="text/css">
+.app_center {
+  background-color: #f5f5f5;
+  height: 700px;
+}
 .center_banner img {
   padding: 0;
   margin: 0;
