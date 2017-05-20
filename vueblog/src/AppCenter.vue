@@ -16,11 +16,19 @@
             <div class='clear'></div>
           </Row> -->
 
+            <div class="row table_row" v-for='(index, value) in arr'>
+              <div class="col-md-<span style="color: #fff;
+                <div>
+                    <div>
+                      Harry{{value}}
+                    </div>
+                    <div class='cell_imgdiv'>
+                      <img src="http://thumb102.hellorf.com/preview/115044886.jpg" class='cell_img'>
+                    </div>
 
-            <div class="row" v-for='(index, value) in arr'>
-              <div class="col-md-<span style="color: #fff;</div>
+                </div>
+              </div>
             </div>
-
         </div>
     </div>
 </template>
@@ -31,7 +39,7 @@
 		data() {
         return{
           shows: true,
-          arr: ['1', '2', '3', '4', '5','11', '22', '33', '44', '55']
+          arr: ['1', '2', '3', '4', '5','11', '22', '33', '44', '55', '66']
         }
 		},
     mounted: function () {
@@ -47,7 +55,7 @@
       }
     },
     watch: {
-    
+      
     }
 });
 </script>
@@ -55,7 +63,6 @@
 <style type="text/css">
 .app_center {
   background-color: #f5f5f5;
-  height: 1700px;
 }
 .center_banner img {
   padding: 0;
@@ -77,20 +84,29 @@
 }
 .center_table {
   margin-top: 30px;
-  text-align: center;
 }
 .code-row-bg {
   background-color: red;
 }
-.center_table div {
+.center_table .table_row {
   display: inline-block;
   background-color: #fff;
-  height: 205px;
+  height: 320px;
   width: 290px;
   margin-top: 30px;
-  margin-right: 20px;
-  border: 1px solid #000;
+  margin-right: 30px;
+  border: 0.1px solid #000;
   border-radius: 5px;
+}
+.cell_imgdiv {
+  font-size: 0;
+}
+.cell_img {
+  width: 100%;
+  height: 230px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 .clear {
   clear: both;
