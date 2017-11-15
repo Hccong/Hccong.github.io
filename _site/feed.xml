@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Harry's Blog</title>
+    <description>Every failure is leading towards success.</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Wed, 15 Nov 2017 18:13:33 +0800</pubDate>
+    <lastBuildDate>Wed, 15 Nov 2017 18:13:33 +0800</lastBuildDate>
+    <generator>Jekyll v3.6.2</generator>
+    
+      <item>
+        <title>利用 Debug Memory Graph 检测内测泄漏</title>
+        <description>&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
+
+&lt;p&gt;平常我们都会用 Instrument 的 Leaks / Allocations 或其他一些开源库进行内存泄露的排查，但它们都存在各种问题和不便，&lt;/p&gt;
+
+&lt;p&gt;在这个 ARC 时代更常见的内存泄露是循环引用导致的 Abandoned memory，Leaks 工具查不出这类内存泄露，应用有限。&lt;/p&gt;
+
+&lt;p&gt;今天介绍一种简单直接的检测内测泄漏的方法：&lt;strong&gt;Debug Memory Graph&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;就是这货：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tNc79gy1fhxct12udnj311x0s3grw.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;正文&quot;&gt;正文&lt;/h2&gt;
+
+&lt;p&gt;我最近的项目中，退出登录后（跳转到登录页），发现首页控制器没有被销毁，依旧能接收通知。&lt;/p&gt;
+
+&lt;p&gt;退出登录代码：&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;UIStoryboard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;storyboard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIStoryboard&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;storyboardWithName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;Login&quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;bundle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSBundle&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;mainBundle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]];&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;AppDelegate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;appDelegate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AppDelegate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIApplication&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sharedApplication&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;delegate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;appDelegate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rootViewController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;storyboard&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;instantiateViewControllerWithIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;LoginVC&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;很明显发生了循环引用导致的内测泄漏。&lt;/p&gt;
+
+&lt;p&gt;接下来就使用 &lt;strong&gt;Debug Memory Graph&lt;/strong&gt; 来查看内测泄漏了。&lt;/p&gt;
+
+&lt;h3 id=&quot;运行程序&quot;&gt;运行程序&lt;/h3&gt;
+
+&lt;p&gt;首先启动 Xcode 运行程序。&lt;/p&gt;
+
+&lt;h3 id=&quot;debug-memory-graph&quot;&gt;Debug Memory Graph&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tNc79gy1fhxend1a8aj315y0s3gw5.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;点击 Debug Memory Graph 按钮后，可以看到红框内的是当前内存中存在的对象。其中，绿色的就是视图控制器。&lt;/p&gt;
+
+&lt;p&gt;这样，我们随时都可以查看内测中存在的对象，换句话说，就是可以通过观察 Memory Graph 查看内测泄漏。&lt;/p&gt;
+
+&lt;h3 id=&quot;调试你的app&quot;&gt;调试你的App&lt;/h3&gt;
+
+&lt;p&gt;继续运行你的程序&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws2.sinaimg.cn/large/006tNc79gy1fhxeuh1np5j30v90kvn03.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;然后对App进行调试、push、pop 操作，再次点击 Debug Memory Graph 按钮。那些该释放而依旧在内测中的 &lt;code class=&quot;highlighter-rouge&quot;&gt;控制器&lt;/code&gt; 或 &lt;code class=&quot;highlighter-rouge&quot;&gt;对象&lt;/code&gt; 就能一一找出来了。&lt;/p&gt;
+
+&lt;p&gt;接下来，只要进入对应的控制器找到内测泄漏的代码就OK了，一般是Block里引用了 &lt;code class=&quot;highlighter-rouge&quot;&gt;self&lt;/code&gt;，改为 &lt;code class=&quot;highlighter-rouge&quot;&gt;weakSelf&lt;/code&gt; 就解决了。&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#define WS(weakSelf) __weak __typeof(&amp;amp;*self)weakSelf = self;
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;WS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;weakSelf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;btnBlock&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSInteger&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;idx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;weakSelf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;reloadSections&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSIndexSet&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;indexSetWithIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;idx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;withRowAnimation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UITableViewRowAnimationAutomatic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;结语&quot;&gt;结语&lt;/h2&gt;
+
+&lt;p&gt;就这样，利用 Debug Memory Graph，可以简单快速的检测内测泄漏。&lt;/p&gt;
+
+&lt;p&gt;一般由两个对象循环引用的内测泄漏是比较好发现的，如果是由三个及其三个以上的对象形成的大的循环引用，就会比较难排查了。&lt;/p&gt;
+</description>
+        <pubDate>Wed, 26 Jul 2017 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/07/26/%E5%88%A9%E7%94%A8-Debug-Memory-Graph-%E6%A3%80%E6%B5%8B%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/07/26/%E5%88%A9%E7%94%A8-Debug-Memory-Graph-%E6%A3%80%E6%B5%8B%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/</guid>
+        
+        <category>Xcode</category>
+        
+        <category>开发技巧</category>
+        
+        
+      </item>
+    
+  </channel>
+</rss>
