@@ -64,7 +64,7 @@ layout: default
 
                 {% if site.duoshuo_share && site.duoshuo_username %}
                 <!-- 多说 Share start -->
-                <div class="ds-share"
+                <!-- <div class="ds-share"
                     style="text-align: right"
                     data-thread-key="{{page.id}}"
                     data-title="{{page.title}}"
@@ -85,12 +85,12 @@ layout: default
                       </div>
                     </div>
                 <hr>
-                </div>
+                </div> -->
                 <!-- 多说 Share end-->
                 {% endif %}
 
 
-                <ul class="pager">
+                <!-- <ul class="pager">
                     {% if page.previous.url %}
                     <li class="previous">
                         <a href="{{ page.previous.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{page.previous.title}}">
@@ -107,26 +107,26 @@ layout: default
                         </a>
                     </li>
                     {% endif %}
-                </ul>
+                </ul> -->
 
 
                 {% if site.duoshuo_username %}
                 <!-- 多说评论框 start -->
-                <div class="comment">
+                <!-- <div class="comment">
                     <div class="ds-thread"
                         data-thread-key="{{page.id}}"
                         data-title="{{page.title}}"
                         data-url="{{site.url}}{{site.baseurl}}{{page.url}}" >
                     </div>
-                </div>
+                </div> -->
                 <!-- 多说评论框 end -->
                 {% endif %}
 
                 {% if site.disqus_username %}
                 <!-- disqus 评论框 start -->
-                <div class="comment">
+                <!-- <div class="comment">
                     <div id="disqus_thread" class="disqus-thread"></div>
-                </div>
+                </div> -->
                 <!-- disqus 评论框 end -->
                 {% endif %}
 
@@ -134,7 +134,7 @@ layout: default
 
     <!-- Side Catalog Container -->
         {% if page.catalog %}
-            <div class="
+            <!-- <div class="
                 col-lg-2 col-lg-offset-0
                 visible-lg-block
                 sidebar-container
@@ -146,7 +146,7 @@ layout: default
                     </h5>
                     <ul class="catalog-body"></ul>
                 </div>
-            </div>
+            </div> -->
         {% endif %}
 
     <!-- Sidebar Container -->

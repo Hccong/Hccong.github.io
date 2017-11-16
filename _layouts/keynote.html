@@ -70,7 +70,7 @@ layout: default
 
                 {% if site.duoshuo_share && site.duoshuo_username %}
                 <!-- 多说 Share start -->
-                <div class="ds-share"
+                <!-- <div class="ds-share"
                     style="text-align: right"
                     data-thread-key="{{page.id}}" data-title="{{page.title}}"
                     data-images="{{ site.url }}{{site.baseurl}}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}"
@@ -89,13 +89,13 @@ layout: default
                       <div class="ds-share-icons-more">
                       </div>
                     </div>
-                <hr>
+                <hr> -->
                 </div>
                 <!-- 多少 Share end-->
                 {% endif %}
 
 
-                <ul class="pager">
+                <!-- <ul class="pager">
                     {% if page.previous.url %}
                     <li class="previous">
                         <a href="{{ page.previous.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{page.previous.title}}">
@@ -112,28 +112,28 @@ layout: default
                         </a>
                     </li>
                     {% endif %}
-                </ul>
+                </ul> -->
 
 
                 {% if site.duoshuo_username %}
                 <!-- 多说评论框 start -->
-                <div class="comment">
+                <!-- <div class="comment">
                     <div class="ds-thread"
                         data-thread-key="{{page.id}}"
                         data-title="{{page.title}}"
                         data-url="{{site.url}}{{site.baseurl}}{{page.url}}" >
                     </div>
-                </div>
+                </div> -->
                 <!-- 多说评论框 end -->
                 {% endif %}
 
                 {% if site.disqus_username %}
                 <!-- disqus 评论框 start -->
-                <div class="comment">
+                <!-- <div class="comment">
                     <div id="disqus_thread" class="disqus-thread">
 
                     </div>
-                </div>
+                </div> -->
                 <!-- disqus 评论框 end -->
                 {% endif %}
 
@@ -201,7 +201,7 @@ layout: default
 
 {% if site.duoshuo_username %}
 <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     // dynamic User by Hux
     var _user = '{{site.duoshuo_username}}';
 
@@ -215,14 +215,14 @@ layout: default
         (document.getElementsByTagName('head')[0]
          || document.getElementsByTagName('body')[0]).appendChild(ds);
     })();
-</script>
+</script> -->
 <!-- 多说公共JS代码 end -->
 {% endif %}
 
 
 {% if site.disqus_username %}
 <!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "{{site.disqus_username}}";
     var disqus_identifier = "{{page.id}}";
@@ -233,14 +233,14 @@ layout: default
         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
-</script>
+</script> -->
 <!-- disqus 公共JS代码 end -->
 {% endif %}
 
 
 {% if site.anchorjs %}
 <!-- async load function -->
-<script>
+<!-- <script>
     function async(u, c) {
       var d = document, t = 'script',
           o = d.createElement(t),
@@ -249,9 +249,9 @@ layout: default
       if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
       s.parentNode.insertBefore(o, s);
     }
-</script>
+</script> -->
 <!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
-<script>
+<!-- <script>
     async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
         anchors.options = {
           visible: 'always',
@@ -260,7 +260,7 @@ layout: default
         };
         anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
     })
-</script>
+</script> -->
 <style>
     /* place left on bigger screen */
     @media all and (min-width: 800px) {
